@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* width */
+  ::-webkit-scrollbar {
+    @apply w-2
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300   rounded-xl
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400
+  }
+}
+
+body { 
+  background: #1E293B;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+}
+
+#root{
+  height: 100vh;
+}

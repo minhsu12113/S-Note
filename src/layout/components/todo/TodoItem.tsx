@@ -13,7 +13,7 @@ export function TodoItem({ todo: content, completed: status }: TodoItemProps) {
 	const handleStatus = (status: boolean) => setStatusItem(status);
 	return (
 		<>
-			<section className='p-2 text-lg flex justify-between transition-colors hover:bg-slate-300 items-center'>
+			<section className='p-2 text-lg flex justify-between transition-colors hover:bg-slate-300 items-center h-auto'>
 				<section className='flex'>
 					<div className={statusItem ? statusColorCompleteClass : defaultStatusColorClass}></div>
 					<p className='m-1'>{content}</p>

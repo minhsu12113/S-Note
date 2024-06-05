@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { TodoItem, TodoItemProps } from './layout/components/todo/TodoItem';
 import { addTodo, loadTodos } from './services/TodoServices';
+import { Guid } from "guid-typescript";
 
 function App() {
 	const [todoItems, setTodoItems] = useState<TodoItemProps[]>();
@@ -23,7 +24,7 @@ function App() {
 
 	const handleAddTodoItem = (content: string) => {
 		if (content && !isShowWaitingUI) {
-			addTodo({ completed: false, todo: content });
+			addTodo({ completed: false, todo: content, id: Guid.create().toString() });
 			loadTodos().then((res) => setTodoItems(res));
 		}
 	};
@@ -32,6 +33,7 @@ function App() {
 		<>
 			<section className='h-full flex flex-col justify-center md:max-w-xl container mx-auto'>
 				<Header addTodoCallBack={handleAddTodoItem} />
+				{/* {isShowWaitingUI ? <LoadingSkeleton /> : <TodoTable todoList={todoItems} />} */}
 				{isShowWaitingUI ? <LoadingSkeleton /> : <TodoTable todoList={todoItems} />}
 			</section>
 		</>
@@ -83,9 +85,10 @@ function TodoTable({ todoList: todoItems }: TodoTableProps) {
 	return (
 		<>
 			{todoItems ? (
-				<section className='h-2/4 bg-white m-4 rounded-lg drop-shadow-2xl overflow-auto h-2/4'>
-					{todoItems?.map((item, index) => (
-						<TodoItem completed={item.completed} todo={item.todo} key={index} />
+				<section className=' bg-white m-4 rounded-lg drop-shadow-2xl overflow-auto h-2/4'>
+					{todoItems?.map((item) => (
+						<TodoItem completed={item.completed} todo={item.todo} id={item.id ? item.id : Guid.create().toString()} 
+						key={item.id ? item.id : Guid.create().toString()}/>
 					))}
 				</section>
 			) : (

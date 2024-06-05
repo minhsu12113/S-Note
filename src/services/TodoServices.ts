@@ -29,5 +29,4 @@ export function addTodo(todoItem: TodoItemProps) {
 
 
 const loadTodoFromLocalStore = () => localStorage.getItem('todos')
-
 const loadTodoFromLocalAPI = () => fetch('https://dummyjson.com/todos?limit=15')  

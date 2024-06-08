@@ -8,9 +8,10 @@ interface TodoTableProps {
 	todoList: Todo[] | undefined;
 	isLoading: boolean;
 	onItemUpdate: (item: Todo) => void;
+	onItemDelete: (item: Todo) => void;
 }
 
-export const TodoTable = ({ todoList: todoItems, isLoading, onItemUpdate }: TodoTableProps) => {
+export const TodoTable = ({ todoList: todoItems, isLoading, onItemUpdate, onItemDelete }: TodoTableProps) => {
 	return (
 		<>
 			{isLoading ? (
@@ -25,6 +26,7 @@ export const TodoTable = ({ todoList: todoItems, isLoading, onItemUpdate }: Todo
 								id={item.id ? item.id : Guid.create().toString()}
 								key={item.id ? item.id : Guid.create().toString()}
 								onUpdateTask={onItemUpdate}
+								onDeleteTask={onItemDelete}
 							/>
 						))
 					) : (

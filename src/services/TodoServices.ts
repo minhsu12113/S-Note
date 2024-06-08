@@ -1,32 +1,45 @@
-import { Todo } from "../models/Todo";
+import { Todo } from "../models/Todo";  
+import { loadTodoFromLocalStorage } from "./data_sources/TodoLocal";
 
-export function loadTodos(): Promise<Todo[]> {
-  const localDataRawData = loadTodoFromLocalStore()
-  return new Promise((resolve, reject) => {
-    loadTodoFromLocalAPI()
-      .then((res) => res.json())
-      .then((res) => {
-        const localData = JSON.parse(localDataRawData as never) 
-        if(localData)
-          resolve(res.todos.concat(localData))
-        else
-          resolve(res.todos)
-      }).catch(() => reject(JSON.parse(localDataRawData as never)));
-  })
-}
+export const loadTodos = (): Todo[] => loadTodoFromLocalStorage()
 
-export function addTodo(todoItem: Todo) {
+export const addTodo = (todoItem: Todo) => {
   if (todoItem) {
-    const todoList = JSON.parse(localStorage.getItem('todos') as never)
-    if(todoList){
-      todoList.push(todoItem)
-      localStorage.setItem('todos', JSON.stringify(todoList))
+    const todoItems = loadTodos()
+    if(todoItems){
+      todoItems.push(todoItem)
+      localStorage.setItem('todos', JSON.stringify(todoItems))
     }else{
       localStorage.setItem('todos', JSON.stringify([todoItem]))
     }
   }
 }
 
+export const updateTodo = (todo: Todo) => {
+  const todoItems = loadTodos() 
+  if(todoItems){
+    const itemUpdate = todoItems.find(e => e.id === todo.id)
+    if(itemUpdate){
+      itemUpdate.completed = todo.completed
+      localStorage.setItem('todos', JSON.stringify(todoItems))
+    }			
+  }
+}
 
-const loadTodoFromLocalStore = () => localStorage.getItem('todos')
-const loadTodoFromLocalAPI = () => fetch('https://dummyjson.com/todos?limit=15')  
+export const deleteTodo = (todo: Todo) => {
+  const todoItems = loadTodos() 
+  if(todoItems){
+    const itemDelete = todoItems.find(e => e.id === todo.id)
+    if(itemDelete){
+      const indexItem = todoItems.indexOf(itemDelete)
+      if (indexItem > -1){
+        todoItems.splice(indexItem, 1)
+        if(todoItems.length > 0)
+          localStorage.setItem('todos', JSON.stringify(todoItems))
+        else{
+          localStorage.removeItem('todos')
+        }
+      }
+    }			
+  }
+}

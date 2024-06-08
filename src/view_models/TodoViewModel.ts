@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { Todo } from "../models/Todo";
-import { addTodo, loadTodos } from "../services/TodoServices";
+import { addTodo, deleteTodo, loadTodos, updateTodo } from "../services/TodoServices";
 import { Guid } from "guid-typescript";
 
 interface State {
@@ -32,6 +32,7 @@ export const todosReducer = (state: State, action: Action): State => {
 interface UseTodosViewModelProp {
   handleAddTodo: (title: string) => void
   handleUpdateTodo: (todo: Todo) => void
+  handleDeleteTodo: (todo: Todo) => void
   state: State
 }
 
@@ -41,14 +42,12 @@ export const useTodosViewModel = (): UseTodosViewModelProp => {
   useEffect(() => { loadTask() }, []);
 
   const loadTask = () => {
-    loadTodos().then(todos => {
-      dispatch({ type: 'FETCH_INIT' });
-      try { 
-        dispatch({ type: 'FETCH_SUCCESS', payload: todos })
-      } catch (error) {
-        dispatch({ type: 'FETCH_FAILURE', payload: error as Error });
-      }
-    })
+    dispatch({ type: 'FETCH_INIT' });
+    try { 
+      dispatch({ type: 'FETCH_SUCCESS', payload: loadTodos() })
+    } catch (error) {
+      dispatch({ type: 'FETCH_FAILURE', payload: error as Error });
+    }
   }
 
   const handleAddTodo = (title: string) => {
@@ -56,15 +55,8 @@ export const useTodosViewModel = (): UseTodosViewModelProp => {
     loadTask()
   }
 
-  const handleUpdateTodo = (todo: Todo) => {
-    const todoItems: Todo[]  = JSON.parse(localStorage.getItem('todos') as never) 
-		if(todoItems){			
-			const itemUpdate = todoItems.find(e => e.id === todo.id)
-			if(itemUpdate){
-				itemUpdate.completed = todo.completed
-				localStorage.setItem('todos', JSON.stringify(todoItems))
-			}			
-		}
-  }
-  return {state, handleAddTodo, handleUpdateTodo};
+  const handleUpdateTodo = (todo: Todo) =>  updateTodo(todo)
+  const handleDeleteTodo = (todo: Todo) =>  { deleteTodo(todo); loadTask()} 
+
+  return {state, handleAddTodo, handleUpdateTodo, handleDeleteTodo};
 };

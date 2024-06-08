@@ -1,6 +1,6 @@
-import { TodoItemProps } from "../layout/components/todo/TodoItem";
+import { Todo } from "../models/Todo";
 
-export function loadTodos(): Promise<TodoItemProps[]> {
+export function loadTodos(): Promise<Todo[]> {
   const localDataRawData = loadTodoFromLocalStore()
   return new Promise((resolve, reject) => {
     loadTodoFromLocalAPI()
@@ -15,7 +15,7 @@ export function loadTodos(): Promise<TodoItemProps[]> {
   })
 }
 
-export function addTodo(todoItem: TodoItemProps) {
+export function addTodo(todoItem: Todo) {
   if (todoItem) {
     const todoList = JSON.parse(localStorage.getItem('todos') as never)
     if(todoList){

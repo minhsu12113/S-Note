@@ -1,11 +1,15 @@
-import { Todo } from "../models/Todo";  
-import { loadTodoFromLocalStorage } from "./data_sources/TodoLocal";
+import { Todo } from "../../models/Todo";  
+import { loadTodoFromLocalStorage } from "../data_sources/TodoLocal";
 
-export const loadTodos = (): Todo[] => loadTodoFromLocalStorage()
+const loadTodos = (): Todo[] => loadTodoFromLocalStorage()
 
-export const addTodo = (todoItem: Todo) => {
+const addTodo = (todoItem: Todo) => {
   if (todoItem) {
     const todoItems = loadTodos()
+
+    const isDuplicateTodo = todoItems.find(e => e.todo.toLowerCase() === todoItem.todo.toLowerCase())
+    if(isDuplicateTodo) return
+
     if(todoItems){
       todoItems.push(todoItem)
       localStorage.setItem('todos', JSON.stringify(todoItems))
@@ -15,7 +19,7 @@ export const addTodo = (todoItem: Todo) => {
   }
 }
 
-export const updateTodo = (todo: Todo) => {
+const updateTodo = (todo: Todo) => {
   const todoItems = loadTodos() 
   if(todoItems){
     const itemUpdate = todoItems.find(e => e.id === todo.id)
@@ -26,7 +30,7 @@ export const updateTodo = (todo: Todo) => {
   }
 }
 
-export const deleteTodo = (todo: Todo) => {
+const deleteTodo = (todo: Todo) => {
   const todoItems = loadTodos() 
   if(todoItems){
     const itemDelete = todoItems.find(e => e.id === todo.id)
@@ -43,3 +47,5 @@ export const deleteTodo = (todo: Todo) => {
     }			
   }
 }
+
+export const TodoLocalStorageService = { loadTodos, addTodo, updateTodo, deleteTodo }

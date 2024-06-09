@@ -17,7 +17,7 @@ export const TodoTable = ({ todoList: todoItems, isLoading, onItemUpdate, onItem
 			{isLoading ? (
 				<SkeletonLoading />
 			) : (
-				<section className=' bg-white m-4 rounded-lg drop-shadow-2xl overflow-auto h-2/4'>
+				<section className='bg-white m-4 rounded-lg drop-shadow-2xl overflow-auto h-2/4'>
 					{!(todoItems === undefined || todoItems.length == 0) ? (
 						todoItems.map((item) => (
 							<TodoItem
@@ -30,7 +30,7 @@ export const TodoTable = ({ todoList: todoItems, isLoading, onItemUpdate, onItem
 							/>
 						))
 					) : (
-						<EmptyData></EmptyData>
+						<EmptyData title='Empty Task'></EmptyData>
 					)}
 				</section>
 			)}

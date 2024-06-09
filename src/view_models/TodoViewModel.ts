@@ -1,12 +1,12 @@
 import { useEffect, useReducer } from "react";
 import { Todo } from "../models/Todo";
-import { addTodo, deleteTodo, loadTodos, updateTodo } from "../services/TodoServices";
 import { Guid } from "guid-typescript";
+import { TodoService } from "../contexts/TodoServicesContext";
 
 interface State {
   todos: Todo[];
   loading: boolean;
-  error: Error | null; 
+  error: Error | null;
 }
 
 type Action = { type: 'FETCH_INIT' }
@@ -36,27 +36,28 @@ interface UseTodosViewModelProp {
   state: State
 }
 
-export const useTodosViewModel = (): UseTodosViewModelProp => {
-  const [state, dispatch] = useReducer(todosReducer, { todos: [], loading: true, error: null });
+export const useTodosViewModel = (todoServices: TodoService): UseTodosViewModelProp => {
+  const [state, dispatch] = useReducer(todosReducer, { todos: [], loading: true, error: null }); 
 
   useEffect(() => { loadTask() }, []);
 
   const loadTask = () => {
     dispatch({ type: 'FETCH_INIT' });
-    try { 
-      dispatch({ type: 'FETCH_SUCCESS', payload: loadTodos() })
+    try {
+      dispatch({ type: 'FETCH_SUCCESS', payload: todoServices.loadTodos() })
     } catch (error) {
       dispatch({ type: 'FETCH_FAILURE', payload: error as Error });
     }
   }
 
   const handleAddTodo = (title: string) => {
-    addTodo({ completed: false, todo: title, id: Guid.create().toString() })
-    loadTask()
+    if (title && !state.loading) {
+      todoServices.addTodo({ completed: false, todo: title, id: Guid.create().toString() })
+      loadTask()
+    }
   }
 
-  const handleUpdateTodo = (todo: Todo) =>  updateTodo(todo)
-  const handleDeleteTodo = (todo: Todo) =>  { deleteTodo(todo); loadTask()} 
-
-  return {state, handleAddTodo, handleUpdateTodo, handleDeleteTodo};
+  const handleUpdateTodo = (todo: Todo) => todoServices.updateTodo(todo)
+  const handleDeleteTodo = (todo: Todo) => { todoServices.deleteTodo(todo); loadTask() }
+  return { state, handleAddTodo, handleUpdateTodo, handleDeleteTodo };
 };

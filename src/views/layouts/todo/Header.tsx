@@ -7,10 +7,10 @@ interface HeaderProps {
 export const Header = ({ addTodoCallBack }: HeaderProps) => {
 	const inputTodo = useRef<HTMLInputElement>(null);
 	return (
-		<section className='header'>
+		<section>
 			<p className='text-4xl antialiased md:subpixel-antialiased font-medium mb-7 text-gray-50 text-center'>S-Note</p>
-			<section className='h-12 mx-4 mt-2 rounded-lg drop-shadow-2xl flex'>
-				<input
+			<section className='h-12 mx-4 rounded-lg drop-shadow-2xl flex'>
+				<input  
 					ref={inputTodo}
 					type='text'
 					className='block w-4/6 rounded-md border-none h-full  
@@ -20,9 +20,9 @@ export const Header = ({ addTodoCallBack }: HeaderProps) => {
 					placeholder='Enter somethings...'
 				/>
 
-				<div
-					onClick={() => {
-						if (inputTodo.current) {
+				<div role="button"
+					onClick={() => { 
+						if (inputTodo.current) {							
 							addTodoCallBack(inputTodo.current.value);
 							inputTodo.current.value = '';
 						}
